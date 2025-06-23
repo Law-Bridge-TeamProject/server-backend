@@ -1,4 +1,4 @@
-import { Schema, model, Model, models, Types } from "mongoose";
+import { Schema, model, Model, models } from "mongoose";
 
 type AchievementSchemaType = {
   title: string;

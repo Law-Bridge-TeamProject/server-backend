@@ -20,7 +20,6 @@ const MessageSchema = new Schema<MessageSchemaType>({
     senderClerkId: { type: String, required: true },
     type: {enum: Object.values(MediaType), default: MediaType.TEXT, required: true },
     content: String,
-    createdAt: { type: Date, default: Date.now }
   },{timestamps: true});
   
 export const Message: Model<MessageSchemaType> =

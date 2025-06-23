@@ -24,24 +24,18 @@ export const appointmentTypeDefs = gql`
     lawyerId: ID!
     schedule: String!
   }
-  
-  input UpdateAppointmentStatusInput {
-    appointmentId: ID!
-    status: AppointmentStatus!
-  }
-  
-  type Query {
-  getAppointments: [Appointment]
-  getAppointmentById(id: ID!): Appointment
-  getAppointmentsByLawyer(lawyerId: ID!): [Appointment]
-  getAppointmentsByUser(userId: ID!): [Appointment]
-}
 
-type Mutation {
-  createAppointment(input: CreateAppointmentInput!): Appointment
-  updateAppointmentStatus(input: UpdateAppointmentStatusInput!): Appointment
-  deleteAppointment(id: ID!): Boolean
-}
+  type Query {
+    getAppointments: [Appointment]
+    getAppointmentById(id: ID!): Appointment
+    getAppointmentsByLawyer(lawyerId: ID!): [Appointment]
+    getAppointmentsByUser(userId: ID!): [Appointment]
+  }
+
+  type Mutation {
+    createAppointment(input: CreateAppointmentInput!): Appointment
+    createChatRoom(appointmentId: ID!): ID
+  }
 `;
 
 

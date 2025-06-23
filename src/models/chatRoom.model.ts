@@ -11,7 +11,6 @@ const ChatRoomSchema = new Schema<ChatRoomSchemaType>({
     participants: [{ type: String }], // Clerk ID-уудаар хадгална
     appointmentId: { type: Schema.Types.ObjectId, ref: 'Appointment' },
     allowedMedia: { type: Boolean, default: false },
-    createdAt: { type: Date, default: Date.now }
   },{timestamps: true});
   
   export const ChatRoom: Model<ChatRoomSchemaType> =
