@@ -1,8 +1,4 @@
 import mongoose from "mongoose";
-import dotenv from "dotenv";
-import path from "path";
-
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 export const connectDatabase = async () => {
   const url = process.env.MONGODB_CONNECTION_URL;
