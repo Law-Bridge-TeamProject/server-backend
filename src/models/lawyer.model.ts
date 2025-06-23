@@ -7,12 +7,12 @@ type LawyerSchemaType = {
   experience?: string;
   verified?: boolean;
   rating?: number;
-  achievements?: Types.ObjectId[]; 
+  achievements?: Types.ObjectId[];
 };
 
 const LawyerSchema = new Schema<LawyerSchemaType>(
   {
-    clerkUserId: { type: String, required: true, unique: true }, // Clerk user ID
+    clerkUserId: { type: String, required: true, unique: true },
     bio: String,
     specialization: [{ type: Schema.Types.ObjectId, ref: "Specialization" }],
     experience: String,
@@ -24,4 +24,4 @@ const LawyerSchema = new Schema<LawyerSchemaType>(
 );
 
 export const Lawyer: Model<LawyerSchemaType> =
-models["Lawyer"] || model("Lawyer", LawyerSchema);
+  models["Lawyer"] || model("Lawyer", LawyerSchema);
