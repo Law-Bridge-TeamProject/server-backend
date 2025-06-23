@@ -6,6 +6,7 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 export type MakeEmpty<T extends { [key: string]: unknown }, K extends keyof T> = { [_ in K]?: never };
 export type Incremental<T> = T | { [P in keyof T]?: P extends ' $fragmentName' | '__typename' ? T[P] : never };
+export type RequireFields<T, K extends keyof T> = Omit<T, K> & { [P in K]-?: NonNullable<T[P]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: { input: string; output: string; }
@@ -15,47 +16,79 @@ export type Scalars = {
   Float: { input: number; output: number; }
 };
 
-export type Car = {
-  __typename?: 'Car';
-  mark?: Maybe<Scalars['String']['output']>;
+export type Appointment = {
+  __typename?: 'Appointment';
+  _id: Scalars['ID']['output'];
+  chatRoomId?: Maybe<Scalars['ID']['output']>;
+  createdAt?: Maybe<Scalars['String']['output']>;
+  lawyerId: Scalars['ID']['output'];
+  schedule: Scalars['String']['output'];
+  status: AppointmentStatus;
+  updatedAt?: Maybe<Scalars['String']['output']>;
+  userId: Scalars['ID']['output'];
 };
 
-export type CreateNewUserInput = {
-  age: Scalars['Int']['input'];
-  gender: Gender;
-  id: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-};
-
-export enum Gender {
-  Female = 'FEMALE',
-  Male = 'MALE'
+export enum AppointmentStatus {
+  Cancelled = 'CANCELLED',
+  Completed = 'COMPLETED',
+  Confirmed = 'CONFIRMED',
+  Pending = 'PENDING'
 }
+
+export type CreateAppointmentInput = {
+  lawyerId: Scalars['ID']['input'];
+  schedule: Scalars['String']['input'];
+  userId: Scalars['ID']['input'];
+};
 
 export type Mutation = {
   __typename?: 'Mutation';
-  createNewuser: User;
+  createAppointment?: Maybe<Appointment>;
+  deleteAppointment?: Maybe<Scalars['Boolean']['output']>;
+  updateAppointmentStatus?: Maybe<Appointment>;
 };
 
 
-export type MutationCreateNewuserArgs = {
-  input?: InputMaybe<CreateNewUserInput>;
+export type MutationCreateAppointmentArgs = {
+  input: CreateAppointmentInput;
+};
+
+
+export type MutationDeleteAppointmentArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type MutationUpdateAppointmentStatusArgs = {
+  input: UpdateAppointmentStatusInput;
 };
 
 export type Query = {
   __typename?: 'Query';
-  getUser: Array<User>;
+  getAppointmentById?: Maybe<Appointment>;
+  getAppointments?: Maybe<Array<Maybe<Appointment>>>;
+  getAppointmentsByLawyer?: Maybe<Array<Maybe<Appointment>>>;
+  getAppointmentsByUser?: Maybe<Array<Maybe<Appointment>>>;
 };
 
-export type User = {
-  __typename?: 'User';
-  age: Scalars['Int']['output'];
-  car?: Maybe<Car>;
-  gender: Gender;
-  id: Scalars['String']['output'];
-  isAdmin?: Maybe<Scalars['Boolean']['output']>;
-  name: Scalars['String']['output'];
-  projects?: Maybe<Array<Maybe<Scalars['String']['output']>>>;
+
+export type QueryGetAppointmentByIdArgs = {
+  id: Scalars['ID']['input'];
+};
+
+
+export type QueryGetAppointmentsByLawyerArgs = {
+  lawyerId: Scalars['ID']['input'];
+};
+
+
+export type QueryGetAppointmentsByUserArgs = {
+  userId: Scalars['ID']['input'];
+};
+
+export type UpdateAppointmentStatusInput = {
+  appointmentId: Scalars['ID']['input'];
+  status: AppointmentStatus;
 };
 
 
@@ -125,57 +158,57 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 
 /** Mapping between all available schema types and the resolvers types */
 export type ResolversTypes = {
+  Appointment: ResolverTypeWrapper<Appointment>;
+  AppointmentStatus: AppointmentStatus;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
-  Car: ResolverTypeWrapper<Car>;
-  CreateNewUserInput: CreateNewUserInput;
-  Gender: Gender;
-  Int: ResolverTypeWrapper<Scalars['Int']['output']>;
+  CreateAppointmentInput: CreateAppointmentInput;
+  ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
-  User: ResolverTypeWrapper<User>;
+  UpdateAppointmentStatusInput: UpdateAppointmentStatusInput;
 };
 
 /** Mapping between all available schema types and the resolvers parents */
 export type ResolversParentTypes = {
+  Appointment: Appointment;
   Boolean: Scalars['Boolean']['output'];
-  Car: Car;
-  CreateNewUserInput: CreateNewUserInput;
-  Int: Scalars['Int']['output'];
+  CreateAppointmentInput: CreateAppointmentInput;
+  ID: Scalars['ID']['output'];
   Mutation: {};
   Query: {};
   String: Scalars['String']['output'];
-  User: User;
+  UpdateAppointmentStatusInput: UpdateAppointmentStatusInput;
 };
 
-export type CarResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Car'] = ResolversParentTypes['Car']> = {
-  mark?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+export type AppointmentResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Appointment'] = ResolversParentTypes['Appointment']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  chatRoomId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  createdAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  lawyerId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  schedule?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  status?: Resolver<ResolversTypes['AppointmentStatus'], ParentType, ContextType>;
+  updatedAt?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
 export type MutationResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Mutation'] = ResolversParentTypes['Mutation']> = {
-  createNewuser?: Resolver<ResolversTypes['User'], ParentType, ContextType, Partial<MutationCreateNewuserArgs>>;
+  createAppointment?: Resolver<Maybe<ResolversTypes['Appointment']>, ParentType, ContextType, RequireFields<MutationCreateAppointmentArgs, 'input'>>;
+  deleteAppointment?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType, RequireFields<MutationDeleteAppointmentArgs, 'id'>>;
+  updateAppointmentStatus?: Resolver<Maybe<ResolversTypes['Appointment']>, ParentType, ContextType, RequireFields<MutationUpdateAppointmentStatusArgs, 'input'>>;
 };
 
 export type QueryResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getUser?: Resolver<Array<ResolversTypes['User']>, ParentType, ContextType>;
-};
-
-export type UserResolvers<ContextType = Context, ParentType extends ResolversParentTypes['User'] = ResolversParentTypes['User']> = {
-  age?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
-  car?: Resolver<Maybe<ResolversTypes['Car']>, ParentType, ContextType>;
-  gender?: Resolver<ResolversTypes['Gender'], ParentType, ContextType>;
-  id?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  isAdmin?: Resolver<Maybe<ResolversTypes['Boolean']>, ParentType, ContextType>;
-  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
-  projects?: Resolver<Maybe<Array<Maybe<ResolversTypes['String']>>>, ParentType, ContextType>;
-  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+  getAppointmentById?: Resolver<Maybe<ResolversTypes['Appointment']>, ParentType, ContextType, RequireFields<QueryGetAppointmentByIdArgs, 'id'>>;
+  getAppointments?: Resolver<Maybe<Array<Maybe<ResolversTypes['Appointment']>>>, ParentType, ContextType>;
+  getAppointmentsByLawyer?: Resolver<Maybe<Array<Maybe<ResolversTypes['Appointment']>>>, ParentType, ContextType, RequireFields<QueryGetAppointmentsByLawyerArgs, 'lawyerId'>>;
+  getAppointmentsByUser?: Resolver<Maybe<Array<Maybe<ResolversTypes['Appointment']>>>, ParentType, ContextType, RequireFields<QueryGetAppointmentsByUserArgs, 'userId'>>;
 };
 
 export type Resolvers<ContextType = Context> = {
-  Car?: CarResolvers<ContextType>;
+  Appointment?: AppointmentResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
-  User?: UserResolvers<ContextType>;
 };
 
