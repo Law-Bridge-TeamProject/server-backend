@@ -13,11 +13,11 @@ export const notificationTypeDefs = gql`
 
   type Notification {
     notificationId: ID!
-    recipientId: ID!
+    recipientId: userId!
     type: NotificationType!
-    message: String!
+    content: String!
     read: Boolean!
-    createdAt: String!
+    createdAt: Date!
   }
 
   extend type Query {
@@ -26,9 +26,9 @@ export const notificationTypeDefs = gql`
 
   extend type Mutation {
     createNotification(
-      userId: ID!
-      lawyerId: ID!
-      message: String!
+      recipientId: ID!
+      type: NotificationType
+      content: String!
     ): Notification!
 
     markNotificationAsRead(notificationId: ID!): Notification!

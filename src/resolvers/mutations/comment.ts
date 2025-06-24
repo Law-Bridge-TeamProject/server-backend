@@ -1,25 +1,30 @@
 import { Comment } from "@/models";
 
 export const createComment = async (
-  _: any,
+  _: unknown,
   { input }: { input: { postId: string; content: string } },
-  { userId }: { userId: string }
+  context: { userId: string; username: string }
 ) => {
-  return await Comment.create({
-    userId,
+  if (!context.userId || !context.username) throw new Error("Unauthorized");
+
+  const newComment = await Comment.create({
     postId: input.postId,
+    author: context.username,
     content: input.content,
+    createdAt: new Date(),
   });
+
+  return newComment;
 };
 
 export const updateComment = async (
-  _: any,
+  _: unknown,
   { input }: { input: { commentId: string; content: string } },
-  { userId }: { userId: string }
+  context: { userId: string; username: string }
 ) => {
   const comment = await Comment.findById(input.commentId);
   if (!comment) throw new Error("Comment not found");
-  if (comment.userId !== userId) throw new Error("Unauthorized");
+  if (comment.author !== context.username) throw new Error("Unauthorized");
 
   comment.content = input.content;
   await comment.save();
@@ -27,13 +32,13 @@ export const updateComment = async (
 };
 
 export const deleteComment = async (
-  _: any,
+  _: unknown,
   { input }: { input: { commentId: string } },
-  { userId }: { userId: string }
+  context: { userId: string; username: string }
 ) => {
   const comment = await Comment.findById(input.commentId);
   if (!comment) throw new Error("Comment not found");
-  if (comment.userId !== userId) throw new Error("Unauthorized");
+  if (comment.author !== context.username) throw new Error("Unauthorized");
 
   await comment.deleteOne();
   return true;

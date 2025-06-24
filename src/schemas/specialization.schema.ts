@@ -18,13 +18,13 @@ export const specializationTypedefs = gql`
   type Specialization {
     specializationId: ID!
     categoryName: SpecializationCategory!
-    Subscription: Boolean!
+    subscription: Boolean!
     pricePerHour: Int
   }
 
   input CreateSpecializationInput {
     categoryName: SpecializationCategory!
-    Subscription: Boolean!
+    subscription: Boolean!
     pricePerHour: Int
   }
 

@@ -2,10 +2,11 @@ import { gql } from "graphql-tag";
 
 export const reviewsTypeDefs = gql`
   type Review {
-    userId: ID!
+    clientId: ID!
     lawyerId: ID!
     rating: Int!
     comment: String
+    createdAt: Date!
   }
 
   input CreateReviewInput {
@@ -15,12 +16,16 @@ export const reviewsTypeDefs = gql`
 
   type Query {
     getReviewsByLawyer(lawyerId: ID!): [Review!]!
-    getReviewsByUser(userId: ID!): [Review!]!
+    getReviewsByUser(clientId: ID!): [Review!]!
   }
 
   type Mutation {
-    createReview(lawyerId: ID!, input: CreateReviewInput!): Review!
-    updateReview(userId: ID!, lawyerId: ID!, input: CreateReviewInput!): Review!
-    deleteReview(userId: ID!, lawyerId: ID!): Boolean
+    createReview(clientId: ID!, input: CreateReviewInput!): Review!
+    updateReview(
+      clientId: ID!
+      lawyerId: ID!
+      input: CreateReviewInput!
+    ): Review!
+    deleteReview(clientId: ID!, lawyerId: ID!): Boolean
   }
 `;

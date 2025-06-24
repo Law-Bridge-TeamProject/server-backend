@@ -14,6 +14,7 @@ export const postTypeDefs = gql`
     specializationId: ID
     title: String!
     content: Media!
+    createdAt: Date!
   }
 
   input MediaInput {
@@ -38,6 +39,7 @@ export const postTypeDefs = gql`
   type Query {
     getPostsByLawyer(lawyerId: String!): [Post!]!
     getPostById(postId: ID!): Post
+    getPostBySpecializationId(specializationId: ID!): [Post!]!
   }
 
   type Mutation {

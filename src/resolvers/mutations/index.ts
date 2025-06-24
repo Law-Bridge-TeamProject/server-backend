@@ -1,1 +1,3 @@
-export * from "./appointment/create-appointment"
+export * from "./post";
+// export * from "./lawyer";
+// export * from "./comment";

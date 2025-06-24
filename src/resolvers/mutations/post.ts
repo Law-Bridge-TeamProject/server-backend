@@ -1,44 +1,102 @@
 import { Post } from "@/models";
 
 export const createPost = async (
-  _: any,
-  { input }: { input: any },
-  { userId }: { userId: string }
+  _: unknown,
+  {
+    input,
+  }: {
+    input: {
+      specializationId?: string;
+      title: string;
+      content: {
+        text?: string;
+        image?: string;
+        video?: string;
+        audio?: string;
+      };
+    };
+  },
+  context: {
+    userId: string;
+    role: string;
+    lawyerId: string | null;
+  }
 ) => {
-  if (!userId) throw new Error("Unauthorized");
+  if (context.role !== "lawyer" || !context.lawyerId) {
+    throw new Error("Only lawyers can create posts.");
+  }
 
   const newPost = await Post.create({
-    lawyerId: userId,
+    lawyerId: context.lawyerId,
     specializationId: input.specializationId,
     title: input.title,
     content: input.content,
+    createdAt: new Date(),
   });
 
   return newPost;
 };
 
 export const updatePost = async (
-  _: any,
-  { postId, input }: { postId: string; input: any },
-  { userId }: { userId: string }
+  _: unknown,
+  {
+    postId,
+    input,
+  }: {
+    postId: string;
+    input: {
+      specializationId?: string;
+      title?: string;
+      content?: {
+        text?: string;
+        image?: string;
+        video?: string;
+        audio?: string;
+      };
+    };
+  },
+  context: {
+    userId: string;
+    role: string;
+    lawyerId: string | null;
+  }
 ) => {
+  if (context.role !== "lawyer" || !context.lawyerId) {
+    throw new Error("Only lawyers can update posts.");
+  }
+
   const post = await Post.findById(postId);
   if (!post) throw new Error("Post not found");
-  if (post.lawyerId !== userId) throw new Error("Unauthorized");
+
+  if (post.lawyerId !== context.lawyerId) {
+    throw new Error("Unauthorized: You can only edit your own posts.");
+  }
 
   Object.assign(post, input);
   await post.save();
+
   return post;
 };
 
 export const deletePost = async (
-  _: any,
+  _: unknown,
   { postId }: { postId: string },
-  { userId }: { userId: string }
+  context: {
+    userId: string;
+    role: string;
+    lawyerId: string | null;
+  }
 ) => {
+  if (context.role !== "lawyer" || !context.lawyerId) {
+    throw new Error("Only lawyers can delete posts.");
+  }
+
   const post = await Post.findById(postId);
   if (!post) throw new Error("Post not found");
-  if (post.lawyerId !== userId) throw new Error("Unauthorized");
+
+  if (post.lawyerId !== context.lawyerId) {
+    throw new Error("Unauthorized: You can only delete your own posts.");
+  }
 
   await post.deleteOne();
   return true;

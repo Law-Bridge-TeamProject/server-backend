@@ -1,15 +1,31 @@
 import { gql } from "graphql-tag";
 
 export const commentTypeDefs = gql`
+  scalar Date
+
   type Comment {
     postId: ID!
     commentId: ID!
-    author: ID!
+    author: String!
     content: String!
+    createdAt: Date!
   }
 
   input CreateCommentInput {
-    content: String
+    postId: ID!
+    author: String!
+    content: String!
+  }
+
+  input UpdateCommentInput {
+    commentId: ID!
+    author: String!
+    content: String!
+  }
+
+  input DeleteCommentInput {
+    commentId: ID!
+    author: String!
   }
 
   type Query {
@@ -18,11 +34,7 @@ export const commentTypeDefs = gql`
 
   type Mutation {
     createComment(input: CreateCommentInput!): Comment!
-    type Mutation {
-  createComment(input: CreateCommentInput!): Comment!
-  updateComment(input: UpdateCommentInput!): Comment!
-  deleteComment(input: DeleteCommentInput!): Boolean!
-}
-
+    updateComment(input: UpdateCommentInput!): Comment!
+    deleteComment(input: DeleteCommentInput!): Boolean!
   }
 `;

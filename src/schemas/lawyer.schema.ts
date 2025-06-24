@@ -13,6 +13,7 @@ export const lawyerTypeDefs = gql`
     rating: Int
     profilePicture: String!
     specializations: [Specialization!]!
+    achievements: Achievement!
   }
 
   input CreateLawyerInput {
