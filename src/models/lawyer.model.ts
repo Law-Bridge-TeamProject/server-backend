@@ -1,18 +1,18 @@
 import { Schema, model, Model, models, Types } from "mongoose";
 
 type LawyerSchemaType = {
-  clerkUserId: string;
+  clientId: string;
   bio?: string;
   specialization?: string[];
   experience?: string;
   verified?: boolean;
   rating?: number;
-  achievements?: Types.ObjectId[]; 
+  achievements?: Types.ObjectId[];
 };
 
 const LawyerSchema = new Schema<LawyerSchemaType>(
   {
-    clerkUserId: { type: String, required: true, unique: true }, // Clerk user ID
+    clientId: { type: String, required: true, unique: true }, // Clerk user ID
     bio: String,
     specialization: [{ type: Schema.Types.ObjectId, ref: "Specialization" }],
     experience: String,

@@ -1,21 +1,32 @@
-import { db } from "@/lib/db";
+import { Message } from "@/models";
 import { QueryResolvers } from "@/types/generated";
+
+type MessageFromDB = {
+  _id: string;
+  chatRoomId: string;
+  userId: string;
+  type: "TEXT" | "IMAGE" | "VIDEO" | "AUDIO";
+  content?: string;
+};
 
 export const getMessages: QueryResolvers["getMessages"] = async (
   parent: unknown,
-  { chatRoomId }
+  { chatRoomId },
+  context
 ) => {
-  const database = await db();
-  const messages = await database
+  const messages = await context.db
     .collection("messages")
     .find({ chatRoomId })
+    .sort({ createdAt: -1 })
     .toArray();
-  return messages.map((message) => ({
-    __typename: "Message",
-    id: message._id.toString(),
-    chatRoomId: message.chatRoomId.toString(),
-    senderClerkId: message.senderClerkId,
-    content: message.content ?? null,
-    type: message.type,
+
+    await Message.find({ chatRoomId }).sort({ createdAt: -1 });
+
+  return messages.map((msg: MessageFromDB) => ({
+    id: msg._id.toString(),
+    chatRoomId: msg.chatRoomId,
+    userId: msg.userId,
+    type: msg.type,
+    content: msg.content,
   }));
 };

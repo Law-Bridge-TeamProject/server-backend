@@ -1,28 +1,42 @@
-import { connectDatabase } from "@/database";
 import { QueryResolvers } from "@/types/generated";
 
 export const getAchievements: QueryResolvers["getAchievements"] = async (
   parent: unknown,
-  { userId }
+  { userId },
+  context
 ) => {
-    const database = (await connectDatabase()) as unknown as import("mongodb").Db;
-    if (!database) {
-        throw new Error("Database connection failed");
-    }
-    const lawyer = await database.collection("lawyers").findOne({ userId });
+    const lawyer = await context.db.collection("Lawyer").findOne({ userId });
 
     if (!lawyer) {
         return [];
     }
 
     const chatroomCount = Array.isArray(lawyer.chatrooms) ? lawyer.chatrooms.length : 0;
-    const achievements = await database
-      .collection("achievements")
+    const achievements = await context.db
+      .collection("Achievement")
       .find({ threshold: { $lte: chatroomCount } })
       .sort({ threshold: 1 })
       .toArray();
 
-    return achievements.map((achievement) => ({
+    interface Achievement {
+      _id: { toString(): string };
+      description: string;
+      threshold: number;
+      title: string;
+      userId: string;
+      icon: string;
+    }
+
+    interface AchievementResult {
+      _id: string;
+      description: string;
+      threshold: number;
+      title: string;
+      userId: string;
+      icon: string;
+    }
+
+    return achievements.map((achievement: Achievement): AchievementResult => ({
       _id: achievement._id.toString(),
       description: achievement.description,
       threshold: achievement.threshold,

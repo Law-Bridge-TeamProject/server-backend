@@ -1,7 +1,7 @@
 import {gql} from 'graphql-tag'
 
 export const chatRoomSchema = gql`
-  enum allowedMediaEnum {
+  enum AllowedMediaEnum {
     TEXT
     AUDIO
     VIDEO
@@ -12,20 +12,20 @@ export const chatRoomSchema = gql`
     _id: String!
     participants: [String!]!
     appointmentId: String!
-    allowedMedia: allowedMediaEnum
+    allowedMedia: AllowedMediaEnum
   }
 
   input CreateChatRoomInput {
     participants: [String!]!
     appointmentId: String!
-    allowedMedia: Boolean
+    allowedMedia: AllowedMediaEnum
   }
 
   input UpdateChatRoomInput {
     _id: String!
     participants: [String!]
     appointmentId: String
-    allowedMedia: Boolean
+    allowedMedia: AllowedMediaEnum
   }
 
   type Query {
@@ -34,7 +34,6 @@ export const chatRoomSchema = gql`
   }
 
   type Mutation {
-    # Only allow chat room creation after appointment has happened
     createChatRoomAfterAppointment(input: CreateChatRoomInput!): ChatRoom!
     updateChatRoom(input: UpdateChatRoomInput!): ChatRoom!
   }

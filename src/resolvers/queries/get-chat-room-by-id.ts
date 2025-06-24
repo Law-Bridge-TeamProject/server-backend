@@ -1,14 +1,13 @@
 import { QueryResolvers } from "@/types/generated";
-import { db } from "@/lib/db";
 import { ObjectId } from "mongodb";
 
 export const getChatRoomById: QueryResolvers["getChatRoomById"] = async (
   parent: unknown,
-  { _id }
+  { _id }, context
 ) => {
-  const database = await db();
-  const chatRoom = await database
-    .collection("chatRooms")
+
+  const chatRoom = await context.db
+    .collection("chatrooms")
     .findOne({ _id: new ObjectId(_id) });
 
   if (!chatRoom) {

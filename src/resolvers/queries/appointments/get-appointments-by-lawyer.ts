@@ -1,27 +1,29 @@
-import { db } from "@/lib/db";
-import { QueryResolvers } from "@/types/generated"
+import { ObjectId } from "mongodb";
+import { AppointmentStatus, QueryResolvers } from "@/types/generated";
 
-export const getAppointmentsByLawyer: QueryResolvers["getAppointmentsByLawyer"] = async (parent: unknown, { lawyerId }) => {
-
+export const getAppointmentsByLawyer: QueryResolvers["getAppointmentsByLawyer"] =
+  async (_, { lawyerId }, context) => {
     if (!lawyerId) {
-        throw new Error("Lawyer ID is required");
+      throw new Error("Lawyer ID is required");
     }
-    
-    const database = await db();
-    const appointments = await database.collection("appointments").find({ lawyerId }).toArray();
-    
+
+    const appointments = await context.db
+      .collection("appointments")
+      .find({ lawyerId: new ObjectId(lawyerId) })
+      .toArray();
+
     if (!appointments || appointments.length === 0) {
-        throw new Error("No appointments found for the specified lawyer.");
+      throw new Error("No appointments found for the specified lawyer.");
     }
-    
-    return appointments.map((appointment) => ({
-        _id: appointment._id?.toString() ?? "",
-        userId: appointment.userId ?? "",
-        lawyerId: appointment.lawyerId ?? "",
-        schedule: appointment.schedule ?? "",
-        status: appointment.status ?? "Pending",
-        chatRoomId: appointment.chatRoomId ? appointment.chatRoomId.toString() : undefined,
-        createdAt: appointment.createdAt?.toISOString() ?? "",
-        updatedAt: appointment.updatedAt?.toISOString() ?? "",
+
+    return appointments.map((appointment: any) => ({
+      _id: appointment._id.toString(),
+      clientId: appointment.clientClerkId ?? "",
+      lawyerId: appointment.lawyerId.toString?.() ?? "",
+      schedule: appointment.schedule ?? "",
+      status: Object.values(AppointmentStatus).includes(appointment.status)
+        ? (appointment.status as AppointmentStatus)
+        : AppointmentStatus.Pending,
+      chatRoomId: appointment.chatRoomId?.toString?.(),
     }));
-}
+  };

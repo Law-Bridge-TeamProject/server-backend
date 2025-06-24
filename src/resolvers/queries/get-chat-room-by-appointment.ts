@@ -1,23 +1,25 @@
-import { db } from "@/lib/db";
 import { QueryResolvers } from "@/types/generated";
+import { ObjectId } from "mongodb";
 
 export const getChatRoomsByAppointment: QueryResolvers["getChatRoomsByAppointment"] =
-  async (parent: unknown, { appointmentId }) => {
-    const database = await db();
-    const chatRoom = await database
-      .collection("chatRooms")
-      .findOne({ appointmentId });
+  async (parent: unknown, { appointmentId }, context) => {
+ 
+    const appointmentObjectId = new ObjectId(appointmentId);
+
+    const chatRoom = await context.db
+      .collection("chatrooms")
+      .findOne({ appointmentId: appointmentObjectId });
 
     if (!chatRoom) {
       throw new Error("Chat room not found for the given appointment");
     }
 
-    const mappedChatRoom = {
-      _id: chatRoom._id.toString(),
-      appointmentId: chatRoom.appointmentId,
-      participants: chatRoom.participants,
-      allowedMedia: chatRoom.allowedMedia,
-    };
-
-    return [mappedChatRoom];
+    return [
+      {
+        _id: chatRoom._id.toString(),
+        appointmentId: chatRoom.appointmentId.toString(),
+        participants: chatRoom.participants,
+        allowedMedia: chatRoom.allowedMedia,
+      },
+    ];
   };

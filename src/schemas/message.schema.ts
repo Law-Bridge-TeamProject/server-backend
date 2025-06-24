@@ -9,9 +9,8 @@ export const messageTypeDefs = gql`
   }
 
   type Message {
-    id: ID!
     chatRoomId: ID!
-    senderClerkId: String!
+    userId: String!
     type: MediaType!
     content: String
   }
@@ -21,7 +20,7 @@ export const messageTypeDefs = gql`
   type Mutation {
     createMessage(
       chatRoomId: ID!
-      senderClerkId: String!
+      userId: String!
       type: MediaType!
       content: String
     ): Message

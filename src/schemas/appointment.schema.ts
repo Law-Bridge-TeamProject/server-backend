@@ -2,39 +2,38 @@ import { gql } from 'graphql-tag';
 
 export const appointmentTypeDefs = gql`
   type Appointment {
-    _id: ID!
-    userId: ID!
-    lawyerId: ID!
+    clientId: String!
+    lawyerId: String!
     schedule: String!
     status: AppointmentStatus!
-    chatRoomId: ID
+    chatRoomId: String
     createdAt: String
     updatedAt: String
   }
-  
+
   enum AppointmentStatus {
-    PENDING,
-    CONFIRMED,
-    COMPLETED,
+    PENDING
+    CONFIRMED
+    COMPLETED
     CANCELLED
   }
-  
+
   input CreateAppointmentInput {
-    userId: ID!
-    lawyerId: ID!
+    clientId: String!
+    lawyerId: String!
     schedule: String!
   }
 
   type Query {
     getAppointments: [Appointment]
-    getAppointmentById(id: ID!): Appointment
-    getAppointmentsByLawyer(lawyerId: ID!): [Appointment]
-    getAppointmentsByUser(userId: ID!): [Appointment]
+    getAppointmentById(id: String!): Appointment
+    getAppointmentsByLawyer(lawyerId: String!): [Appointment]
+    getAppointmentsByUser(clientId: String!): [Appointment]
   }
 
   type Mutation {
     createAppointment(input: CreateAppointmentInput!): Appointment
-    createChatRoom(appointmentId: ID!): ID
+    createChatRoom(appointmentId: String!): String
   }
 `;
 

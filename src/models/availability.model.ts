@@ -1,21 +1,19 @@
 import { Schema, model, Model, models, Types } from "mongoose";
 
 enum DayOfWeek {
-    MONDAY = 'Monday',
-    TUESDAY = 'Tuesday',
-    WEDNESDAY = 'Wednesday',
-    THURSDAY = 'Thursday',
-    FRIDAY = 'Friday',
-    SATURDAY = 'Saturday',
-    SUNDAY = 'Sunday'
+  MONDAY = "MONDAY",
+  TUESDAY = "TUESDAY",
+  WEDNESDAY = "WEDNESDAY",
+  THURSDAY = "THURSDAY",
+  FRIDAY = "FRIDAY",
+  SATURDAY = "Saturday",
+  SUNDAY = "SUNDAY",
 }
 type AvailabilityScheduleSchemaType = {
     lawyerId: Types.ObjectId; 
     day: DayOfWeek;
     startTime: string; 
     endTime: string; 
-    createdAt?: Date;
-    updatedAt?: Date;
 };
 
 const AvailabilityScheduleSchema = new Schema<AvailabilityScheduleSchemaType>({
@@ -27,8 +25,6 @@ const AvailabilityScheduleSchema = new Schema<AvailabilityScheduleSchemaType>({
     },
     startTime: { type: String, required: true }, 
     endTime: { type: String, required: true },   
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now }
   },{timestamps: true});
   
   export const AvailabilitySchedule: Model<AvailabilityScheduleSchemaType> =

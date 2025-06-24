@@ -14,7 +14,7 @@ const schema = makeExecutableSchema({
 export function startWsServer(httpServer: ReturnType<typeof createServer>) {
   const wsServer = new WebSocketServer({
     server: httpServer,
-    path: "/graphql",
+    path: "/api/graphql",
   });
 
   useServer({ schema }, wsServer);

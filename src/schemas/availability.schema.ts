@@ -12,21 +12,20 @@ export const availabilityTypeDefs = gql`
   }
 
   type Availability {
-    _id: ID!
-    userId: ID!
-    date: DayOfWeek!
+    lawyerId: String!
+    day: DayOfWeek!
     startTime: String!
     endTime: String!
   }
 
   type Query {
-    getAvailability(userId: ID!, date: String!): [Availability]
+    getAvailability(lawyerId: String!, day: DayOfWeek!): [Availability]
   }
 
   type Mutation {
     setAvailability(
-      userId: ID!
-      date: String!
+      lawyerId: String!
+      day: DayOfWeek!
       startTime: String!
       endTime: String!
     ): Availability

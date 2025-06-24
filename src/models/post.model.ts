@@ -13,7 +13,6 @@ type PostSchemaType = {
     content?: string;
     specialization?: Types.ObjectId[];
     type?: MediaType;
-    createdAt?: Date;
 };
 
 const PostSchema = new Schema<PostSchemaType>({
@@ -22,11 +21,11 @@ const PostSchema = new Schema<PostSchemaType>({
     content: { type: String },
     specialization: [{ type: Schema.Types.ObjectId, ref: 'Specialization' }],
     type: { 
+     type: String,
      enum: Object.values(MediaType),
      default: MediaType.TEXT,
      required: true
     },
-    createdAt: { type: Date, default: Date.now }
   },{timestamps: true});
 
 export const Post: Model<PostSchemaType> =

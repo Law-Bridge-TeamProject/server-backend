@@ -1,40 +1,22 @@
-import { MutationResolvers } from "@/types/generated"
-import { db } from "@/lib/db";
+import { ChatRoom } from "@/models";
+import { MutationResolvers } from "@/types/generated";
 
-import { ObjectId } from "mongodb";
+export const createChatRoomAfterAppointment: MutationResolvers["createChatRoomAfterAppointment"] =
+  async (_, { input }) => {
+    const { participants, appointmentId, allowedMedia } = input;
 
-export const createChatRoomAfterAppointment: MutationResolvers["createChatRoom"] =
-  async (parent: unknown, args, context) => {
-    const { appointmentId } = args;
-    const database = await db();
-    const appointment = await database
-      .collection("appointments")
-      .findOne({ _id: new ObjectId(appointmentId) });
+    const newRoomDoc = await ChatRoom.create({
+      participants,
+      appointmentId,
+      allowedMedia: allowedMedia ?? "TEXT",
+    });
 
-    if (!appointment) {
-      throw new Error("Appointment not found");
-    }
-
-    const now = new Date();
-    const appointmentDate = new Date(appointment.date);
-    const fiveMinutesBefore = new Date(
-      appointmentDate.getTime() - 5 * 60 * 1000
-    );
-
-    if (now < fiveMinutesBefore) {
-      throw new Error(
-        "Chat room can only be created within 5 minutes before the appointment time"
-      );
-    }
-
-    const chatRoomDoc = {
-      appointmentId: appointment._id,
-      participants: appointment.participants,
-      allowedMedia: appointment.allowedMedia || false,
+    // Convert _id to string to match GraphQL type and ensure allowedMedia is an AllowedMediaEnum value
+    const newRoom = {
+      ...newRoomDoc.toObject(),
+      _id: newRoomDoc._id.toString(),
+      allowedMedia: (typeof newRoomDoc.allowedMedia === "string" ? newRoomDoc.allowedMedia : "TEXT"),
     };
-    const result = await database
-      .collection("chatRooms")
-      .insertOne(chatRoomDoc);
 
-    return result.insertedId.toString();
+    return newRoom as unknown as import("@/types/generated").ChatRoom;
   };

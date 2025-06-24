@@ -1,34 +1,28 @@
-import { MutationResolvers,  } from "@/types/generated";
+import { ChatRoom } from "@/models";
+import { MutationResolvers } from "@/types/generated";
 
-export const updateChatRoom:MutationResolvers["updateChatRoom"] = async (parent: unknown,{ input }, context: any) => {
+export const updateChatRoom: MutationResolvers["updateChatRoom"] = async (
+  _,
+  { input },
+  context
+) => {
   const { _id, participants, appointmentId, allowedMedia } = input;
 
-  const database = await context.db();
-  const chatRoom = await database.collection("chatRooms").findOne({ _id });
-
-  if (!chatRoom) {
-    throw new Error("Chat room not found");
-  }
-
   const updateFields: any = {};
-  if (participants !== undefined) {
-    updateFields.participants = participants;
-  }
-  if (appointmentId !== undefined) {
-    updateFields.appointmentId = appointmentId;
-  }
-  if (allowedMedia !== undefined) {
-    updateFields.allowedMedia = allowedMedia;
+  if (participants !== undefined) updateFields.participants = participants;
+  if (appointmentId !== undefined) updateFields.appointmentId = appointmentId;
+  if (allowedMedia !== undefined) updateFields.allowedMedia = allowedMedia;
+
+  const updatedChatRoom = await ChatRoom.findByIdAndUpdate(_id, updateFields, {
+    new: true,
+  });
+
+  if (!updatedChatRoom) {
+    throw new Error("ChatRoom not found");
   }
 
-  const result = await database.collection("chatRooms").updateOne(
-    { _id },
-    { $set: updateFields }
-  );
+  // Convert _id to string to match GraphQL type
+  const chatRoomObj = updatedChatRoom.toObject();
 
-  if (result.modifiedCount === 0) {
-    throw new Error("No changes made to the chat room");
-  }
-
-  return database.collection("chatRooms").findOne({ _id });
-}
+  return chatRoomObj as unknown as import("@/types/generated").ChatRoom;
+};

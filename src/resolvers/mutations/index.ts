@@ -1,3 +1,6 @@
 export * from "./create-appointment"
 export * from "./create-chat-room"
 export * from "./update-chat-room"
+export * from "./create-message"
+export * from "./set-availability"
+export * from "./achievement"

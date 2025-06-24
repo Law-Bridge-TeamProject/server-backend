@@ -1,23 +1,23 @@
-import { db } from "@/lib/db";
-import { QueryResolvers } from "@/types/generated";
+import { QueryResolvers, Availability, DayOfWeek } from "@/types/generated";
 
-export const getAvailability:QueryResolvers["getAvailability"] = async (parent: unknown, { userId, date }) => {
+export const getAvailability:QueryResolvers["getAvailability"] = async (parent: unknown, { lawyerId, day }, context) => {
 
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-        throw new Error("Invalid date format. Use YYYY-MM-DD.");
+    const availabilityDocs = await context.db
+      .collection("availabilityschedules")
+      .find({ lawyerId, date: day })
+      .toArray();
+
+    interface AvailabilityDoc {
+        _id: { toString(): string };
+        lawyerId: string;
+        date: string;
+        startTime: string;
+        endTime: string;
     }
-    
-    const database = await db();
-    const availabilityDocs = await database.collection("availability").find({ userId, date }).toArray();
-    
-    if (!availabilityDocs || availabilityDocs.length === 0) {
-        throw new Error("No availability found for the specified user and date.");
-    }
 
-    const availabilities = availabilityDocs.map(doc => ({
-        _id: doc._id.toString(),
-        userId: doc.userId,
-        date: doc.date,
+    const availabilities: Availability[] = (availabilityDocs as AvailabilityDoc[]).map((doc: AvailabilityDoc): Availability => ({
+        lawyerId: doc.lawyerId,
+        day: doc.date as DayOfWeek, 
         startTime: doc.startTime,
         endTime: doc.endTime,
     }));

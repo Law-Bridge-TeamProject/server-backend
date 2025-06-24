@@ -1,7 +1,7 @@
 // src/resolvers/subscription.ts
 import { PubSub } from "graphql-subscriptions";
 
-export const pubsub = new PubSub<any>(); // ← ЭНД any generic-г нэмнэ
+export const pubsub = new PubSub<any>(); 
 
 export const Subscription = {
   messageAdded: {
