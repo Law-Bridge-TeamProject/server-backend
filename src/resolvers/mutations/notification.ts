@@ -22,15 +22,15 @@ export const createNotification = async (
     createdAt: new Date(),
   });
 
-  // 📨 Email илгээх
-  //   const email = await getUserEmailById(recipientId);
-  //   if (email) {
-  //     await sendNotificationEmail({
-  //       to: email,
-  //       subject: "Шинэ мэдэгдэл",
-  //       text: content,
-  //     });
-  //   }
+  📨 Email илгээх
+    const email = await getUserEmailById(recipientId);
+    if (email) {
+      await sendNotificationEmail({
+        to: email,
+        subject: "Шинэ мэдэгдэл",
+        text: content,
+      });
+    }
 
   return notification;
 };

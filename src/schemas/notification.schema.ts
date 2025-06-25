@@ -12,8 +12,8 @@ export const notificationTypeDefs = gql`
   }
 
   type Notification {
-    notificationId: ID!
-    recipientId: userId!
+    lawyerId: lawyerId!
+    clientId: clientId
     type: NotificationType!
     content: String!
     read: Boolean!
@@ -26,7 +26,8 @@ export const notificationTypeDefs = gql`
 
   extend type Mutation {
     createNotification(
-      recipientId: ID!
+      lawyerId: ID!
+      clientId: ID!
       type: NotificationType
       content: String!
     ): Notification!

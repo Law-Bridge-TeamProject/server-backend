@@ -20,12 +20,8 @@ export const reviewsTypeDefs = gql`
   }
 
   type Mutation {
-    createReview(clientId: ID!, input: CreateReviewInput!): Review!
-    updateReview(
-      clientId: ID!
-      lawyerId: ID!
-      input: CreateReviewInput!
-    ): Review!
-    deleteReview(clientId: ID!, lawyerId: ID!): Boolean
+    createReview(lawyerId: ID!, input: CreateReviewInput!): Review!
+    updateReview(lawyerId: ID!, input: CreateReviewInput!): Review!
+    deleteReview(lawyerId: ID!): Boolean!
   }
 `;
