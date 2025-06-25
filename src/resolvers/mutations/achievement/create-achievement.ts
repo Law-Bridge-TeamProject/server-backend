@@ -1,6 +1,5 @@
 import { MutationResolvers } from "@/types/generated";
 import { Achievement } from "@/models";
-import { Types } from "mongoose";
 
 export const createAchievement: MutationResolvers["createAchievement"] = async (
   _,

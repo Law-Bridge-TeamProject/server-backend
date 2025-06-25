@@ -25,7 +25,7 @@ export const achievementTypeDefs = gql`
   }
 
   type Query {
-    getAchievements(userId: ID!): [Achievement]
+    getAchievements(lawyerId: ID!): [Achievement]
   }
 
   type Mutation {

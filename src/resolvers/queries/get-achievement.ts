@@ -2,10 +2,10 @@ import { QueryResolvers } from "@/types/generated";
 
 export const getAchievements: QueryResolvers["getAchievements"] = async (
   parent: unknown,
-  { userId },
+  { lawyerId },
   context
 ) => {
-    const lawyer = await context.db.collection("Lawyer").findOne({ userId });
+    const lawyer = await context.db.collection("Lawyer").findOne({ lawyerId });
 
     if (!lawyer) {
         return [];
