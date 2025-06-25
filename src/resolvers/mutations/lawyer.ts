@@ -16,7 +16,6 @@ export const createLawyer: MutationResolvers["createLawyer"] = async (
 
   const lawyer = await Lawyer.create({
     lawyerId: lawyerId,
-    verified: false,
     firstName: input.firstName,
     lastName: input.lastName,
     email: input.email,

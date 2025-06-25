@@ -1,19 +1,14 @@
 import { Schema, model, Model, models, Types } from "mongoose";
-
-enum MediaType {
-  TEXT = "TEXT",
-  IMAGE = "IMAGE",
-  VIDEO = "VIDEO",
-  FILE = "FILE",
-}
+import { Media } from "@/types/generated";
 
 type PostSchemaType = {
   lawyerId: string;
   title: string;
-  content?: string;
-  specialization?: Types.ObjectId[];
-  type?: MediaType;
-  createdAt?: Date;
+  content: string;
+  specialization: Types.ObjectId[];
+  type: Media;
+  createdAt: Date;
+  updateAt: Date;
 };
 
 const PostSchema = new Schema<PostSchemaType>(
@@ -23,11 +18,11 @@ const PostSchema = new Schema<PostSchemaType>(
     content: { type: String },
     specialization: [{ type: Schema.Types.ObjectId, ref: "Specialization" }],
     type: {
-      enum: Object.values(MediaType),
-      default: MediaType.TEXT,
+      type: String,
+      enum: Object.values(Media),
+      default: Media.Text,
       required: true,
     },
-    createdAt: { type: Date, default: Date.now },
   },
   { timestamps: true }
 );

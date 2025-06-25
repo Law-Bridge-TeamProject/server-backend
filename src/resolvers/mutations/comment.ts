@@ -1,7 +1,7 @@
 import { Comment } from "@/models";
 import { MutationResolvers } from "@/types/generated";
 
-export const createComment: MutationResolvers[""] = async (
+export const createComment = async (
   _: unknown,
   { input }: { input: { postId: string; content: string } },
   context: { userId: string; username: string }

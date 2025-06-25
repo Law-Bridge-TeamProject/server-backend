@@ -9,7 +9,6 @@ type LawyerSchemaType = {
   bio?: string;
   specialization?: string[];
   experience?: string;
-  verified?: boolean;
   rating?: number;
   profilePicture: string;
   achievements?: Types.ObjectId[];
@@ -25,7 +24,6 @@ const LawyerSchema = new Schema<LawyerSchemaType>(
     bio: String,
     specialization: [{ type: Schema.Types.ObjectId, ref: "Specialization" }],
     experience: String,
-    verified: { type: Boolean, default: false },
     rating: { type: Number, default: 0 },
     profilePicture: String,
     achievements: [{ type: Schema.Types.ObjectId, ref: "Achievement" }],

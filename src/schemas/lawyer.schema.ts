@@ -16,6 +16,12 @@ export const lawyerTypeDefs = gql`
     achievements: String!
   }
 
+  input SpecializationInput {
+    categoryName: SpecializationCategory!
+    subscription: Boolean!
+    pricePerHour: Int
+  }
+
   input CreateLawyerInput {
     firstName: String!
     lastName: String!
@@ -24,7 +30,7 @@ export const lawyerTypeDefs = gql`
     bio: String!
     experience: String!
     profilePicture: String!
-    specializations: [Specialization!]!
+    specializations: [SpecializationInput!]!
   }
 
   type Query {

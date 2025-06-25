@@ -12,8 +12,8 @@ export const notificationTypeDefs = gql`
   }
 
   type Notification {
-    lawyerId: lawyerId!
-    clientId: clientId
+    lawyerId: String!
+    clientId: String
     type: NotificationType!
     content: String!
     read: Boolean!
@@ -22,6 +22,8 @@ export const notificationTypeDefs = gql`
 
   extend type Query {
     getNotifications(userId: ID!): [Notification!]!
+    getNotificationsClient(userId: ID!): [Notification!]!
+    getNotificationsLawyer(userId: ID!): [Notification!]!
   }
 
   extend type Mutation {
@@ -35,3 +37,8 @@ export const notificationTypeDefs = gql`
     markNotificationAsRead(notificationId: ID!): Notification!
   }
 `;
+/*
+  Note: The error indicates that you have a resolver for Query.getNotificationsLawyer,
+  but there is no corresponding definition in your GraphQL schema.
+  To fix this, add the following to your type definitions:
+*/

@@ -1,20 +1,22 @@
 import { gql } from "graphql-tag";
 
 export const postTypeDefs = gql`
-  type Media {
-    text: String
-    image: String
-    video: String
-    audio: String
+  enum Media {
+    text
+    image
+    video
+    audio
   }
 
   type Post {
+    _id: ID!
     lawyerId: String!
-    postId: ID!
-    specializationId: ID
     title: String!
-    content: Media!
+    content: String!
+    specialization: [String!]!
+    type: Media!
     createdAt: Date!
+    updateAt: Date!
   }
 
   input MediaInput {
@@ -25,13 +27,13 @@ export const postTypeDefs = gql`
   }
 
   input CreatePostInput {
-    specializationId: ID
+    specialization: [String!]!
     title: String!
     content: MediaInput!
   }
 
   input UpdatePostInput {
-    specializationId: ID
+    specialization: [String!]!
     title: String
     content: MediaInput
   }
@@ -39,7 +41,8 @@ export const postTypeDefs = gql`
   type Query {
     getPostsByLawyer(lawyerId: String!): [Post!]!
     getPostById(postId: ID!): Post
-    getPostBySpecializationId(specializationId: ID!): [Post!]!
+    getPostsBySpecializationId(specializationId: ID!): [Post!]!
+    searchPosts(query: String!): [Post!]!
   }
 
   type Mutation {
