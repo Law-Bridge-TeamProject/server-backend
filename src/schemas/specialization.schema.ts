@@ -16,7 +16,7 @@ export const specializationTypedefs = gql`
   }
 
   type Specialization {
-    specializationId: ID!
+    id: ID!
     categoryName: SpecializationCategory!
     subscription: Boolean!
     pricePerHour: Int
@@ -28,19 +28,25 @@ export const specializationTypedefs = gql`
     pricePerHour: Int
   }
 
-  type Query {
-    getSpecializations: [Specialization!]!
-    getSpecializationByCategory(
-      categoryName: SpecializationCategory!
-    ): Specialization
+  input UpdateSpecializationInput {
+    subscription: Boolean
+    pricePerHour: Int
   }
+  
+  type Query {
+  getSpecializations: [Specialization!]!
+  getSpecializationByCategory(categoryName: SpecializationCategory!): Specialization
+  getSpecializationsByLawyer(
+    lawyerId: ID!
+    subscription: Boolean
+  ): [Specialization!]!
+}
+
 
   type Mutation {
     createSpecialization(input: CreateSpecializationInput!): Specialization!
-    updateSpecialization(
-      categoryName: SpecializationCategory!
-      input: CreateSpecializationInput!
-    ): Specialization
-    deleteSpecialization(categoryName: SpecializationCategory!): Boolean
+    updateSpecialization(categoryName: SpecializationCategory!, input: UpdateSpecializationInput!): Specialization!
+    deleteSpecialization(categoryName: SpecializationCategory!): Boolean!
   }
 `;
+

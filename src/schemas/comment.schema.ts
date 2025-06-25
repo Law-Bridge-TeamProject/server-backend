@@ -4,28 +4,26 @@ export const commentTypeDefs = gql`
   scalar Date
 
   type Comment {
-    postId: ID!
-    commentId: ID!
+    _id: ID!
+    post: ID!
     author: String!
     content: String!
     createdAt: Date!
+    updatedAt: Date!
   }
 
   input CreateCommentInput {
     postId: ID!
-    author: String!
     content: String!
   }
 
   input UpdateCommentInput {
     commentId: ID!
-    author: String!
     content: String!
   }
 
   input DeleteCommentInput {
     commentId: ID!
-    author: String!
   }
 
   type Query {

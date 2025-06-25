@@ -1,6 +1,8 @@
 import { gql } from "graphql-tag";
 
 export const postTypeDefs = gql`
+  scalar Date
+
   enum Media {
     text
     image
@@ -12,11 +14,11 @@ export const postTypeDefs = gql`
     _id: ID!
     lawyerId: String!
     title: String!
-    content: String!
+    content: MediaInput!
     specialization: [String!]!
     type: Media!
     createdAt: Date!
-    updateAt: Date!
+    updatedAt: Date!
   }
 
   input MediaInput {
@@ -30,12 +32,14 @@ export const postTypeDefs = gql`
     specialization: [String!]!
     title: String!
     content: MediaInput!
+    type: Media!
   }
 
   input UpdatePostInput {
-    specialization: [String!]!
+    specialization: [String!]
     title: String
     content: MediaInput
+    type: Media
   }
 
   type Query {

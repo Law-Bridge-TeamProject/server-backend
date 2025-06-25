@@ -1,6 +1,6 @@
 import { sendNotificationEmail } from "@/lib/sendEmail";
 import { Notification } from "@/models";
-// import { getUserEmailById } from "@/utils/getUserEmail";
+import { getUserEmailById } from "@/utils/getUserEmail";
 
 export const createNotification = async (
   _: unknown,
@@ -22,7 +22,7 @@ export const createNotification = async (
     createdAt: new Date(),
   });
 
-  📨 Email илгээх
+
     const email = await getUserEmailById(recipientId);
     if (email) {
       await sendNotificationEmail({

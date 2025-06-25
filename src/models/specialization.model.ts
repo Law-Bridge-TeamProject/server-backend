@@ -1,16 +1,21 @@
 import { Schema, model, Model, models } from "mongoose";
 
-type SpecializationSchemaType = {
+export type SpecializationSchemaType = {
   categoryName: string;
   subscription: boolean;
-  pricePerHour: number;
+  pricePerHour?: number;
 };
 
 const SpecializationSchema = new Schema<SpecializationSchemaType>({
   categoryName: { type: String, required: true, unique: true },
   subscription: { type: Boolean, default: false },
-  pricePerHour: Number,
+  pricePerHour: {
+    type: Number,
+    required: function () {
+      return this.subscription === true;
+    },
+  },
 });
 
 export const Specialization: Model<SpecializationSchemaType> =
-  models["Specialization"] || model("Specialization", SpecializationSchema);
+  models.Specialization || model<SpecializationSchemaType>("Specialization", SpecializationSchema);

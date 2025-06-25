@@ -34,14 +34,12 @@ const handler = async (req: NextRequest) => {
     context: async (req) => {
       const authorization = req.headers.get("Authorization") || "";
       const parsedToken = await verifyToken(authorization, {
-        secretKey: "sk_test_Nur27TD4SOCju9TnxSBePNvDAiMvjbYhU6nTbsyId9",
+        secretKey: process.env.CLERK_SECRET_KEY,
       });
 
       const userId = parsedToken.sub;
-      const username = parsedToken.username;
-      const role = (parsedToken.publicMetadata as any)?.role as
-        | string
-        | undefined;
+      const username = parsedToken.username as string | null;
+      const role = ((parsedToken.publicMetadata as any)?.role as string | undefined) ?? null;
 
       let clientId: string | null = null;
       let lawyerId: string | null = null;

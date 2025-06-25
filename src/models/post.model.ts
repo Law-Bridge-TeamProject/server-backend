@@ -4,18 +4,28 @@ import { Media } from "@/types/generated";
 type PostSchemaType = {
   lawyerId: string;
   title: string;
-  content: string;
+  content: {
+    text?: string;
+    image?: string;
+    video?: string;
+    audio?: string;
+  };
   specialization: Types.ObjectId[];
   type: Media;
   createdAt: Date;
-  updateAt: Date;
+  updatedAt: Date;  
 };
 
 const PostSchema = new Schema<PostSchemaType>(
   {
-    lawyerId: String,
+    lawyerId: { type: String, required: true },
     title: { type: String, required: true },
-    content: { type: String },
+    content: {
+      text: { type: String },
+      image: { type: String },
+      video: { type: String },
+      audio: { type: String },
+    },
     specialization: [{ type: Schema.Types.ObjectId, ref: "Specialization" }],
     type: {
       type: String,
@@ -28,4 +38,4 @@ const PostSchema = new Schema<PostSchemaType>(
 );
 
 export const Post: Model<PostSchemaType> =
-  models["Post"] || model("Post", PostSchema);
+  models.Post || model<PostSchemaType>("Post", PostSchema);
