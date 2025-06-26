@@ -6,7 +6,7 @@ enum DayOfWeek {
   WEDNESDAY = "WEDNESDAY",
   THURSDAY = "THURSDAY",
   FRIDAY = "FRIDAY",
-  SATURDAY = "Saturday",
+  SATURDAY = "SATURDAY",
   SUNDAY = "SUNDAY",
 }
 type AvailabilityScheduleSchemaType = {

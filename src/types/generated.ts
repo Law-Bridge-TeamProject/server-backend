@@ -85,6 +85,13 @@ export type CreateChatRoomInput = {
   participants: Array<Scalars['String']['input']>;
 };
 
+export type CreateDocumentInput = {
+  content?: InputMaybe<Scalars['String']['input']>;
+  images: Array<Scalars['String']['input']>;
+  title: Scalars['String']['input'];
+  type?: InputMaybe<MediaType>;
+};
+
 export enum DayOfWeek {
   Friday = 'FRIDAY',
   Monday = 'MONDAY',
@@ -93,6 +100,25 @@ export enum DayOfWeek {
   Thursday = 'THURSDAY',
   Tuesday = 'TUESDAY',
   Wednesday = 'WEDNESDAY'
+}
+
+export type Document = {
+  __typename?: 'Document';
+  _id: Scalars['ID']['output'];
+  clientId: Scalars['String']['output'];
+  content?: Maybe<Scalars['String']['output']>;
+  images: Array<Scalars['String']['output']>;
+  lawyerId?: Maybe<Scalars['ID']['output']>;
+  reviewComment?: Maybe<Scalars['String']['output']>;
+  status?: Maybe<ReviewStatus>;
+  title: Scalars['String']['output'];
+  type?: Maybe<DocumentMediaType>;
+};
+
+export enum DocumentMediaType {
+  File = 'FILE',
+  Image = 'IMAGE',
+  Text = 'TEXT'
 }
 
 export enum MediaType {
@@ -116,8 +142,10 @@ export type Mutation = {
   createAppointment?: Maybe<Appointment>;
   createChatRoom?: Maybe<Scalars['String']['output']>;
   createChatRoomAfterAppointment: ChatRoom;
+  createDocument: Document;
   createMessage?: Maybe<Message>;
   deleteAchievement: Scalars['Boolean']['output'];
+  reviewDocument: Document;
   setAvailability?: Maybe<Availability>;
   updateAchievement: Achievement;
   updateChatRoom: ChatRoom;
@@ -144,6 +172,11 @@ export type MutationCreateChatRoomAfterAppointmentArgs = {
 };
 
 
+export type MutationCreateDocumentArgs = {
+  input: CreateDocumentInput;
+};
+
+
 export type MutationCreateMessageArgs = {
   chatRoomId: Scalars['ID']['input'];
   content?: InputMaybe<Scalars['String']['input']>;
@@ -154,6 +187,11 @@ export type MutationCreateMessageArgs = {
 
 export type MutationDeleteAchievementArgs = {
   id: Scalars['ID']['input'];
+};
+
+
+export type MutationReviewDocumentArgs = {
+  input: ReviewDocumentInput;
 };
 
 
@@ -184,6 +222,8 @@ export type Query = {
   getAvailability?: Maybe<Array<Maybe<Availability>>>;
   getChatRoomById?: Maybe<ChatRoom>;
   getChatRoomsByAppointment: Array<ChatRoom>;
+  getDocumentsByStatus: Array<Document>;
+  getDocumentsByUser: Array<Document>;
   getMessages: Array<Message>;
 };
 
@@ -224,9 +264,31 @@ export type QueryGetChatRoomsByAppointmentArgs = {
 };
 
 
+export type QueryGetDocumentsByStatusArgs = {
+  status: ReviewStatus;
+};
+
+
+export type QueryGetDocumentsByUserArgs = {
+  userId: Scalars['String']['input'];
+};
+
+
 export type QueryGetMessagesArgs = {
   chatRoomId: Scalars['ID']['input'];
 };
+
+export type ReviewDocumentInput = {
+  documentId: Scalars['ID']['input'];
+  reviewComment?: InputMaybe<Scalars['String']['input']>;
+  status: ReviewStatus;
+};
+
+export enum ReviewStatus {
+  Pending = 'PENDING',
+  Rejected = 'REJECTED',
+  Reviewed = 'REVIEWED'
+}
 
 export type Subscription = {
   __typename?: 'Subscription';
@@ -330,13 +392,18 @@ export type ResolversTypes = {
   CreateAchievementInput: CreateAchievementInput;
   CreateAppointmentInput: CreateAppointmentInput;
   CreateChatRoomInput: CreateChatRoomInput;
+  CreateDocumentInput: CreateDocumentInput;
   DayOfWeek: DayOfWeek;
+  Document: ResolverTypeWrapper<Document>;
+  DocumentMediaType: DocumentMediaType;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   MediaType: MediaType;
   Message: ResolverTypeWrapper<Message>;
   Mutation: ResolverTypeWrapper<{}>;
   Query: ResolverTypeWrapper<{}>;
+  ReviewDocumentInput: ReviewDocumentInput;
+  ReviewStatus: ReviewStatus;
   String: ResolverTypeWrapper<Scalars['String']['output']>;
   Subscription: ResolverTypeWrapper<{}>;
   UpdateAchievementInput: UpdateAchievementInput;
@@ -353,11 +420,14 @@ export type ResolversParentTypes = {
   CreateAchievementInput: CreateAchievementInput;
   CreateAppointmentInput: CreateAppointmentInput;
   CreateChatRoomInput: CreateChatRoomInput;
+  CreateDocumentInput: CreateDocumentInput;
+  Document: Document;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Message: Message;
   Mutation: {};
   Query: {};
+  ReviewDocumentInput: ReviewDocumentInput;
   String: Scalars['String']['output'];
   Subscription: {};
   UpdateAchievementInput: UpdateAchievementInput;
@@ -400,6 +470,19 @@ export type ChatRoomResolvers<ContextType = Context, ParentType extends Resolver
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
+export type DocumentResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Document'] = ResolversParentTypes['Document']> = {
+  _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  clientId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  images?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
+  lawyerId?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  reviewComment?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  status?: Resolver<Maybe<ResolversTypes['ReviewStatus']>, ParentType, ContextType>;
+  title?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  type?: Resolver<Maybe<ResolversTypes['DocumentMediaType']>, ParentType, ContextType>;
+  __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
+};
+
 export type MessageResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Message'] = ResolversParentTypes['Message']> = {
   chatRoomId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   content?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
@@ -413,8 +496,10 @@ export type MutationResolvers<ContextType = Context, ParentType extends Resolver
   createAppointment?: Resolver<Maybe<ResolversTypes['Appointment']>, ParentType, ContextType, RequireFields<MutationCreateAppointmentArgs, 'input'>>;
   createChatRoom?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType, RequireFields<MutationCreateChatRoomArgs, 'appointmentId'>>;
   createChatRoomAfterAppointment?: Resolver<ResolversTypes['ChatRoom'], ParentType, ContextType, RequireFields<MutationCreateChatRoomAfterAppointmentArgs, 'input'>>;
+  createDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationCreateDocumentArgs, 'input'>>;
   createMessage?: Resolver<Maybe<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<MutationCreateMessageArgs, 'chatRoomId' | 'type' | 'userId'>>;
   deleteAchievement?: Resolver<ResolversTypes['Boolean'], ParentType, ContextType, RequireFields<MutationDeleteAchievementArgs, 'id'>>;
+  reviewDocument?: Resolver<ResolversTypes['Document'], ParentType, ContextType, RequireFields<MutationReviewDocumentArgs, 'input'>>;
   setAvailability?: Resolver<Maybe<ResolversTypes['Availability']>, ParentType, ContextType, RequireFields<MutationSetAvailabilityArgs, 'day' | 'endTime' | 'lawyerId' | 'startTime'>>;
   updateAchievement?: Resolver<ResolversTypes['Achievement'], ParentType, ContextType, RequireFields<MutationUpdateAchievementArgs, 'input'>>;
   updateChatRoom?: Resolver<ResolversTypes['ChatRoom'], ParentType, ContextType, RequireFields<MutationUpdateChatRoomArgs, 'input'>>;
@@ -429,6 +514,8 @@ export type QueryResolvers<ContextType = Context, ParentType extends ResolversPa
   getAvailability?: Resolver<Maybe<Array<Maybe<ResolversTypes['Availability']>>>, ParentType, ContextType, RequireFields<QueryGetAvailabilityArgs, 'day' | 'lawyerId'>>;
   getChatRoomById?: Resolver<Maybe<ResolversTypes['ChatRoom']>, ParentType, ContextType, RequireFields<QueryGetChatRoomByIdArgs, '_id'>>;
   getChatRoomsByAppointment?: Resolver<Array<ResolversTypes['ChatRoom']>, ParentType, ContextType, RequireFields<QueryGetChatRoomsByAppointmentArgs, 'appointmentId'>>;
+  getDocumentsByStatus?: Resolver<Array<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<QueryGetDocumentsByStatusArgs, 'status'>>;
+  getDocumentsByUser?: Resolver<Array<ResolversTypes['Document']>, ParentType, ContextType, RequireFields<QueryGetDocumentsByUserArgs, 'userId'>>;
   getMessages?: Resolver<Array<ResolversTypes['Message']>, ParentType, ContextType, RequireFields<QueryGetMessagesArgs, 'chatRoomId'>>;
 };
 
@@ -441,6 +528,7 @@ export type Resolvers<ContextType = Context> = {
   Appointment?: AppointmentResolvers<ContextType>;
   Availability?: AvailabilityResolvers<ContextType>;
   ChatRoom?: ChatRoomResolvers<ContextType>;
+  Document?: DocumentResolvers<ContextType>;
   Message?: MessageResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;
   Query?: QueryResolvers<ContextType>;
