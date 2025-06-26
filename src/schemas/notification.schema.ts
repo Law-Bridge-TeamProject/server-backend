@@ -1,6 +1,8 @@
 import { gql } from "graphql-tag";
 
 export const notificationTypeDefs = gql`
+  scalar Date
+
   enum NotificationType {
     APPOINTMENT_REQUEST
     APPOINTMENT_CONFIRMATION
@@ -12,33 +14,29 @@ export const notificationTypeDefs = gql`
   }
 
   type Notification {
+    id: ID!
     lawyerId: String!
     clientId: String
     type: NotificationType!
-    content: String!
+    content: String
     read: Boolean!
     createdAt: Date!
   }
 
   extend type Query {
     getNotifications(userId: ID!): [Notification!]!
-    getNotificationsClient(userId: ID!): [Notification!]!
-    getNotificationsLawyer(userId: ID!): [Notification!]!
+    getNotificationsClient(clientId: ID!): [Notification!]!
+    getNotificationsLawyer(lawyerId: ID!): [Notification!]!
   }
 
   extend type Mutation {
     createNotification(
       lawyerId: ID!
-      clientId: ID!
-      type: NotificationType
+      clientId: ID
+      type: NotificationType!
       content: String!
     ): Notification!
 
     markNotificationAsRead(notificationId: ID!): Notification!
   }
 `;
-/*
-  Note: The error indicates that you have a resolver for Query.getNotificationsLawyer,
-  but there is no corresponding definition in your GraphQL schema.
-  To fix this, add the following to your type definitions:
-*/

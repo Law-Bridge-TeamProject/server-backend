@@ -1,47 +1,65 @@
 import { gql } from "graphql-tag";
 
 export const lawyerTypeDefs = gql`
+  scalar Date
+
   type Lawyer {
-    lawyerId: String!
-    verified: Boolean!
+    id: ID!
+    lawyerId: ID!
     firstName: String!
     lastName: String!
     email: String!
     licenseNumber: String!
-    bio: String!
-    experience: String!
+    bio: String
+    university: String!
+    specialization: [Specialization!]!
+    achievements: [Achievement!]!
+    document: String
     rating: Int
     profilePicture: String!
-    specializations: [Specialization!]!
-    achievements: String!
-  }
-
-  input SpecializationInput {
-    categoryName: SpecializationCategory!
-    subscription: Boolean!
-    pricePerHour: Int
+    createdAt: Date!
+    updatedAt: Date
   }
 
   input CreateLawyerInput {
+    lawyerId: ID!
     firstName: String!
     lastName: String!
     email: String!
     licenseNumber: String!
-    bio: String!
-    experience: String!
+    bio: String
+    university: String!
+    specialization: [ID!]!
+    achievements: [ID!]
+    document: String
+    rating: Int
     profilePicture: String!
-    specializations: [SpecializationInput!]!
+  }
+
+  input UpdateLawyerInput {
+    firstName: String
+    lastName: String
+    email: String
+    licenseNumber: String
+    bio: String
+    university: String
+    specialization: [ID!]
+    achievements: [ID!]
+    document: String
+    rating: Int
+    profilePicture: String
   }
 
   type Query {
-    getLawyers: [Lawyer]
-    getLawyerById(lawyerId: String!): Lawyer
-    getLawyersBySpecialization(specialization: String!): [Lawyer]
+    getLawyers: [Lawyer!]!
+    getLawyerById(lawyerId: ID!): Lawyer
+    getLawyersBySpecialization(specializationId: ID!): [Lawyer!]!
+    getLawyersByAchievement(achievementId: ID!): [Lawyer!]!
   }
 
   type Mutation {
-    createLawyer(input: CreateLawyerInput!): Lawyer
-    updateLawyer(lawyerId: String!, input: CreateLawyerInput!): Lawyer
-    deleteLawyer(lawyerId: String!): Boolean
+    createLawyer(input: CreateLawyerInput!): Lawyer!
+    updateLawyer(lawyerId: ID!, input: UpdateLawyerInput!): Lawyer!
+    deleteLawyer(lawyerId: ID!): Boolean!
   }
 `;

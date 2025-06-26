@@ -39,7 +39,9 @@ const handler = async (req: NextRequest) => {
 
       const userId = parsedToken.sub;
       const username = parsedToken.username as string | null;
-      const role = ((parsedToken.publicMetadata as any)?.role as string | undefined) ?? null;
+      const role =
+        ((parsedToken.publicMetadata as any)?.role as string | undefined) ??
+        null;
 
       let clientId: string | null = null;
       let lawyerId: string | null = null;

@@ -1,26 +1,22 @@
 import { Schema, model, Model, models } from "mongoose";
+import { NotificationType } from "@/types/generated";
 
 type NotificationSchemaType = {
   recipientClerkId: string;
-  type?: string;
+  lawyerId: string;
+  clientId?: string;
+  type: NotificationType;
   content?: string;
   read?: boolean;
   createdAt?: Date;
 };
+
 const NotificationSchema = new Schema<NotificationSchemaType>(
   {
     recipientClerkId: { type: String, required: true },
     type: {
       type: String,
-      enum: [
-        "APPOINTMENT_REQUEST",
-        "APPOINTMENT_CONFIRMATION",
-        "APPOINTMENT_CANCELLATION",
-        "APPOINTMENT_REMINDER",
-        "APPOINTMENT_STARTED",
-        "REVIEW_RECEIVED",
-        "SPECIALIZATION_UPDATE",
-      ],
+      enum: Object.values(NotificationType),
       required: true,
     },
     content: String,

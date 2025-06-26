@@ -1,10 +1,10 @@
-import { Schema, model, Model, models, Types } from "mongoose";
+import { Schema, model, Model, models } from "mongoose";
 
-type AchievementSchemaType = {
+export type AchievementSchemaType = {
   title: string;
   description: string;
   threshold: number;
-  icon: string; 
+  icon: string;
 };
 
 const AchievementSchema = new Schema<AchievementSchemaType>({
@@ -13,6 +13,6 @@ const AchievementSchema = new Schema<AchievementSchemaType>({
   threshold: Number,
   icon: String,
 });
-  
+
 export const Achievement: Model<AchievementSchemaType> =
   models["Achievement"] || model("Achievement", AchievementSchema);
