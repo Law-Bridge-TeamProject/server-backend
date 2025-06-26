@@ -1,9 +1,11 @@
-import { Schema, model, Model, models, Types } from "mongoose";
+import { Schema, model, models, Types, Model } from "mongoose";
 
 type CommentSchemaType = {
   post: Types.ObjectId;
   author: string;
   content: string;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 const CommentSchema = new Schema<CommentSchemaType>(
@@ -16,4 +18,5 @@ const CommentSchema = new Schema<CommentSchemaType>(
 );
 
 export const Comment: Model<CommentSchemaType> =
-  models["Comment"] || model("Comment", CommentSchema);
+ models.Comment || model<CommentSchemaType>("Comment", CommentSchema);
+ 

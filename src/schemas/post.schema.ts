@@ -4,10 +4,9 @@ export const postTypeDefs = gql`
   scalar Date
 
   enum Media {
-    text
-    image
-    video
-    audio
+    TEXT
+    VIDEO
+    IMAGE
   }
 
   type Post {

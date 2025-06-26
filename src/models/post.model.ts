@@ -1,33 +1,46 @@
 import { Schema, model, Model, models, Types } from "mongoose";
 
-enum MediaType{
-    TEXT = 'TEXT',
-    IMAGE = 'IMAGE',
-    VIDEO = 'VIDEO',
-    FILE = 'FILE'
+enum Media {
+  TEXT = "TEXT",
+  VIDEO = "VIDEO",
+  IMAGE = "IMAGE",
 }
 
 type PostSchemaType = {
-    lawyerId: Types.ObjectId;
-    title: string;
-    content?: string;
-    specialization?: Types.ObjectId[];
-    type?: MediaType;
+  lawyerId: string;
+  title: string;
+  content: {
+    text?: string;
+    image?: string;
+    video?: string;
+    audio?: string;
+  };
+  specialization: Types.ObjectId[];
+  type: Media;
+  createdAt: Date;
+  updatedAt: Date;  
 };
 
-const PostSchema = new Schema<PostSchemaType>({
-    lawyerId: { type: Schema.Types.ObjectId, ref: 'Lawyer', required: true },
+const PostSchema = new Schema<PostSchemaType>(
+  {
+    lawyerId: { type: String, required: true },
     title: { type: String, required: true },
-    content: { type: String },
-    specialization: [{ type: Schema.Types.ObjectId, ref: 'Specialization' }],
-    type: { 
-     type: String,
-     enum: Object.values(MediaType),
-     default: MediaType.TEXT,
-     required: true
+    content: {
+      text: { type: String },
+      image: { type: String },
+      video: { type: String },
+      audio: { type: String },
     },
-  },{timestamps: true});
+    specialization: [{ type: Schema.Types.ObjectId, ref: "Specialization" }],
+    type: {
+      type: String,
+      enum: Object.values(Media),
+      default: Media.TEXT,
+      required: true,
+    },
+  },
+  { timestamps: true }
+);
 
 export const Post: Model<PostSchemaType> =
-    models["Post"] || model("Post", PostSchema);
-  
+  models.Post || model<PostSchemaType>("Post", PostSchema);

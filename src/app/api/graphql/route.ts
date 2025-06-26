@@ -1,11 +1,14 @@
+// app/api/graphql/route.ts
 import { startServerAndCreateNextHandler } from "@as-integrations/next";
 import { ApolloServer } from "@apollo/server";
 import { NextRequest } from "next/server";
 import { typeDefs } from "@/schemas";
 import { resolvers } from "@/resolvers";
 import { connectDatabase } from "@/database";
+import { startWsServer } from "@/lib/ws-server";
 import { verifyToken } from "@clerk/backend";
 import mongoose from "mongoose";
+import net from "net";
 
 let isDbConnected = false;
 
@@ -20,11 +23,35 @@ async function initializeServer() {
     }
   }
 
-  return new ApolloServer({
+  return new ApolloServer<Context>({
     typeDefs,
     resolvers,
-    introspection: true, // introspection-г идэвхжүүлнэ
+    introspection: true,
   });
+}
+
+function isPortAvailable(port: number): Promise<boolean> {
+  return new Promise((resolve) => {
+    const tester = net
+      .createServer()
+      .once("error", () => resolve(false))
+      .once("listening", () => tester.close(() => resolve(true)))
+      .listen(port);
+  });
+}
+
+if (typeof window === "undefined") {
+  const port = 3000;
+  if (await isPortAvailable(port)) {
+    const { createServer } = await import("http");
+    const httpServer = createServer();
+    startWsServer(httpServer);
+    httpServer.listen(port, () => {
+      console.log(`✅ WS server started on port ${port}`);
+    });
+  } else {
+    console.log(`⚠️ Port ${port} is already in use, skipping WS server`);
+  }
 }
 
 const handler = async (req: NextRequest) => {
