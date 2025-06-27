@@ -5,6 +5,7 @@ import { reviewsTypeDefs } from "./review.schema";
 import { specializationTypedefs } from "./specialization.schema";
 import { postTypeDefs } from "./post.schema";
 import { achievementTypeDefs } from "./achievements.schema";
+import { lawyerRequestTypeDefs } from "./lawyer-request.schema";
 
 export const typeDefs = [
   achievementTypeDefs,
@@ -14,4 +15,5 @@ export const typeDefs = [
   reviewsTypeDefs,
   notificationTypeDefs,
   postTypeDefs,
+  lawyerRequestTypeDefs,
 ];

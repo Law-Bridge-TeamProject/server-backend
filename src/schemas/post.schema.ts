@@ -14,7 +14,7 @@ export const postTypeDefs = gql`
     _id: ID!
     lawyerId: String!
     title: String!
-    content: MediaInput!
+    content: Media!
     specialization: [String!]!
     type: Media!
     createdAt: Date!

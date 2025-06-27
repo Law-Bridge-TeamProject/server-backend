@@ -327,7 +327,7 @@ export enum NotificationType {
 export type Post = {
   __typename?: 'Post';
   _id: Scalars['ID']['output'];
-  content: MediaInput;
+  content: Media;
   createdAt: Scalars['Date']['output'];
   lawyerId: Scalars['String']['output'];
   specialization: Array<Scalars['String']['output']>;
@@ -759,7 +759,7 @@ export type NotificationResolvers<ContextType = Context, ParentType extends Reso
 
 export type PostResolvers<ContextType = Context, ParentType extends ResolversParentTypes['Post'] = ResolversParentTypes['Post']> = {
   _id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
-  content?: Resolver<ResolversTypes['MediaInput'], ParentType, ContextType>;
+  content?: Resolver<ResolversTypes['Media'], ParentType, ContextType>;
   createdAt?: Resolver<ResolversTypes['Date'], ParentType, ContextType>;
   lawyerId?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
   specialization?: Resolver<Array<ResolversTypes['String']>, ParentType, ContextType>;
