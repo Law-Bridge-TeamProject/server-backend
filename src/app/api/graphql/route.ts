@@ -41,7 +41,7 @@ function isPortAvailable(port: number): Promise<boolean> {
 }
 
 if (typeof window === "undefined") {
-  const port = 3000;
+  const port =5000;
   if (await isPortAvailable(port)) {
     const { createServer } = await import("http");
     const httpServer = createServer();
